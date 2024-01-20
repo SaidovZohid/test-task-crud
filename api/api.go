@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	v1 "github.com/SaidovZohid/test-task-crud/api/v1"
 	"github.com/SaidovZohid/test-task-crud/config"
 	"github.com/SaidovZohid/test-task-crud/pkg/logger"
@@ -43,6 +45,11 @@ func New(opt *RoutetOptions) *gin.Engine {
 	})
 
 	apiV1 := router.Group("/v1")
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"working": true,
+		})
+	})
 	{
 		apiV1.POST("/auth/signup", handlerV1.SignUp)
 		apiV1.POST("/auth/verify", handlerV1.Verify)
