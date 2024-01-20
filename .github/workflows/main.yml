@@ -37,8 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Migrate
-        run: apk add wget && wget https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz
-        run: tar -xvf migrate.linux-amd64.tar.gz && mv migrate.linux-amd64 migrate && chmod +x migrate
+        run: |
+          apk add wget && wget https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz && tar -xvf migrate.linux-amd64.tar.gz && mv migrate.linux-amd64 migrate && chmod +x migrate
 
       - name: SSH into the server and deploy
         uses: appleboy/ssh-action@master
