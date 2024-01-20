@@ -36,16 +36,9 @@ jobs:
     needs: build_and_push
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
-
       - name: Install Migrate
-        run: go get -v -u github.com/golang-migrate/migrate/v4/cmd/migrate
+        run: apk add wget && wget https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz
+        run: tar -xvf migrate.linux-amd64.tar.gz && mv migrate.linux-amd64 migrate && chmod +x migrate
 
       - name: SSH into the server and deploy
         uses: appleboy/ssh-action@master
@@ -57,7 +50,4 @@ jobs:
           script: |
             cd test-task-dels
             make up
-          
-      - name: Run Database Migrations
-        run: |
-          migrate -path ./migrations -database "${{ secrets.DATABASE_URL }}" -verbose up
+            migrate -path ./migrations -database "${{ secrets.DATABASE_URL }}" -verbose up
