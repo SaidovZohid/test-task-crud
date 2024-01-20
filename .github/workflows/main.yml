@@ -36,16 +36,6 @@ jobs:
     needs: build_and_push
     runs-on: ubuntu-latest
     steps:
-  #     - name: Install Migrate
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y wget
-  #         wget https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz
-  #         tar -xvf migrate.linux-amd64.tar.gz
-  #         mv migrate.linux-amd64 migrate
-  #         chmod +x migrate
-  #         ./migrate -path migrations -database  "${{ secrets.DATABASE_URL }}" up
-      
       - name: SSH into the server and deploy
         uses: appleboy/ssh-action@master
         with:
@@ -56,3 +46,4 @@ jobs:
           script: |
             cd test-task-dels
             make up
+            docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" my_test_task_container ./migrate -path migrations up
