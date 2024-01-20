@@ -44,7 +44,7 @@ jobs:
           tar -xvf migrate.linux-amd64.tar.gz
           mv migrate.linux-amd64 migrate
           chmod +x migrate
-          ./migrate -path ./migrations -database "${{ secrets.DATABASE_URL }}" -verbose up
+          ./migrate -path migrations -database  "${{ secrets.DATABASE_URL }}" up
       
       - name: SSH into the server and deploy
         uses: appleboy/ssh-action@master
