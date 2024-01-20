@@ -383,6 +383,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.ResponseError"
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseError"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
