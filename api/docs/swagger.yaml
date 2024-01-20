@@ -1,0 +1,377 @@
+basePath: /v1
+definitions:
+  models.AuthRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 16
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.Blog:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      user_info:
+        $ref: '#/definitions/models.BlogUser'
+    type: object
+  models.BlogUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.CreateAndUpdateBlog:
+    properties:
+      content:
+        minLength: 20
+        type: string
+      title:
+        maxLength: 300
+        minLength: 5
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  models.GetAllBlogsResult:
+    properties:
+      blogs:
+        items:
+          $ref: '#/definitions/models.Blog'
+        type: array
+      count:
+        type: integer
+    type: object
+  models.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  models.ResponseError:
+    properties:
+      error:
+        type: string
+    type: object
+  models.VerifyRequest:
+    properties:
+      code:
+        minLength: 6
+        type: string
+      email:
+        type: string
+    required:
+    - code
+    - email
+    type: object
+info:
+  contact: {}
+  description: This is a documentation for new's and blog's apis.
+  version: "2.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Login User
+      tags:
+      - auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Sign up to the application with email and password and get the
+        verification code and verify email address.
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Sign up api for new users
+      tags:
+      - auth
+  /auth/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verify the user after sign up with code and get access_token.
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Verify the user after sign up with code and get access_token.
+      tags:
+      - auth
+  /blogs:
+    get:
+      description: Get blogs by giving limit, page, user_id, sort and search
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - default: 1
+        in: query
+        name: page
+        required: true
+        type: integer
+      - in: query
+        name: search
+        type: string
+      - default: desc
+        enum:
+        - desc
+        - asc
+        in: query
+        name: sort
+        type: string
+      - in: query
+        name: user_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetAllBlogsResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Get blogs by giving limit, page, user_id, sort and search
+      tags:
+      - blog
+    post:
+      consumes:
+      - application/json
+      description: Create a blog
+      parameters:
+      - description: Blog
+        in: body
+        name: blog
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAndUpdateBlog'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Blog'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a blog
+      tags:
+      - blog
+  /blogs/{id}:
+    delete:
+      description: Delete blog works only for user who created it!
+      parameters:
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete blog
+      tags:
+      - blog
+    get:
+      description: Get blog by its id
+      parameters:
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Blog'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Get blog by its id
+      tags:
+      - blog
+    put:
+      consumes:
+      - application/json
+      description: Update blog with it's id as param
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAndUpdateBlog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Blog'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
+      summary: Update blog with it's id as param
+      tags:
+      - blog
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

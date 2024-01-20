@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS "users" (
+    "id" SERIAL PRIMARY KEY,
+    "email" VARCHAR(255) UNIQUE NOT NULL,
+    "password_hash" VARCHAR(255) NOT NULL,
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "blogs" (
+    "id" SERIAL PRIMARY KEY,
+    "title" VARCHAR(255) NOT NULL,
+    "content" TEXT NOT NULL,
+    "user_id" INT REFERENCES users(id) ON DELETE CASCADE,
+    "created_at" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CREATE TABLE IF NOT EXISTS "news" (
+--     "id" SERIAL PRIMARY KEY,
+--     "title" VARCHAR(255) NOT NULL,
+--     "image_url" VARCHAR(255),
+--     "content" TEXT NOT NULL,
+--     "user_id" INT REFERENCES users(id) ON DELETE CASCADE,
+--     "created_at" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+-- );

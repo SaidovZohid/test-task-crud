@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .bold-and-copy {
+          font-weight: bold;
+          cursor: pointer;
+          user-select: all;
+      }
+  </style>
+    <title>Verification Code</title>
+  </head>
+  <body>
+    <p class="bold-and-copy">Hello {{.name}},</p>
+    <p>
+      Thank you for completing the sign up process.
+    </p>
+    <p>
+      To activate your account. We need to verify your email address. Please use the verification code below: <p class="bold-and-copy">{{.code}}</p>
+    </p>
+  </body>
+</html>
