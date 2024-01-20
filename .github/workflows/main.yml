@@ -32,10 +32,10 @@ jobs:
       - name: Get the image digest
         run: echo "Docker image digest ${{ steps.docker_build.outputs.digest }}"
 
-  # deploy:
-  #   needs: build_and_push
-  #   runs-on: ubuntu-latest
-  #   steps:
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
   #     - name: Install Migrate
   #       run: |
   #         sudo apt-get update
