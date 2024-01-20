@@ -11,7 +11,7 @@ tidy:
 cache:
 	@go clean -testcache
 
-test-storage:
+test:
 	# @go test -v -cover ./storage/...
 	@go test -v -cover ./...
 
