@@ -16,7 +16,7 @@ test-storage:
 	@go test -v -cover ./...
 
 swag-init:
-	swag init -g api/api.go -o api/docs
+	@swag init -g api/api.go -o api/docs
 
 # database migrations
 #
@@ -41,14 +41,14 @@ migratedown1:
 	@migrate -path migrations -database "$(DB_URL)" -verbose down 1
 
 up:
-	docker compose --env-file ./.env.docker up -d
+	@docker compose --env-file ./.env.docker up -d
 
 down:
-	docker compose down
+	@docker compose down
 
 build:
-	docker build --platform linux/amd64 --tag $(DOCKER_USERNAME)/test-task-crud:latest .
+	@docker build --platform linux/amd64 --tag $(DOCKER_USERNAME)/test-task-crud:latest .
 
 push: build
-	docker image push $(DOCKER_USERNAME)/test-task-crud:latest
+	@docker image push $(DOCKER_USERNAME)/test-task-crud:latest
 	

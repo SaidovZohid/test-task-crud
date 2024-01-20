@@ -45,7 +45,7 @@ func New(opt *RoutetOptions) *gin.Engine {
 	})
 
 	apiV1 := router.Group("/v1")
-	router.GET("/", func(ctx *gin.Context) {
+	router.GET("/test", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"working": true,
 		})
