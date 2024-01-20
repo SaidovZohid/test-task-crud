@@ -51,4 +51,3 @@ build:
 
 push: build
 	@docker image push $(DOCKER_USERNAME)/test-task-crud:latest
-	
