@@ -46,4 +46,3 @@ jobs:
           script: |
             cd test-task-dels
             make up
-            sudo docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" my_test_task_container ./migrate -path migrations up
